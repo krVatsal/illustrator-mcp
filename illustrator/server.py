@@ -14,7 +14,7 @@ import mcp.server.stdio
 from PIL import ImageGrab
 import win32com.client
 
-# Configure logging
+# Set up logging
 logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s [%(levelname)s] %(message)s",
@@ -38,7 +38,7 @@ async def handle_list_tools() -> list[types.Tool]:
             inputSchema={
                 "type": "object",
                 "properties": {
-                    "code": {"type": "string", "description": "ExtendScript/JavaScript code to execute in Illustrator."}
+                    "code": {"type": "string", "description": "ExtendScript code to execute."}
                 },
                 "required": ["code"],
             },
@@ -46,17 +46,15 @@ async def handle_list_tools() -> list[types.Tool]:
     ]
 
 def capture_illustrator() -> list[types.TextContent | types.ImageContent]:
-    logging.info("Capturing Illustrator screenshot.")
+    logging.info("Starting screenshot capture for Illustrator.")
     try:
         shell = win32com.client.Dispatch("WScript.Shell")
         shell.AppActivate("Adobe Illustrator")
         time.sleep(1)
-
         screenshot = ImageGrab.grab()
         buffer = io.BytesIO()
         screenshot.save(buffer, format="JPEG", quality=50, optimize=True)
         screenshot_data = base64.b64encode(buffer.getvalue()).decode("utf-8")
-
         logging.info("Screenshot captured successfully.")
         return [types.ImageContent(type="image", mimeType="image/jpeg", data=screenshot_data)]
     except Exception as e:
@@ -64,38 +62,36 @@ def capture_illustrator() -> list[types.TextContent | types.ImageContent]:
         return [types.TextContent(type="text", text=f"Failed to capture screenshot: {str(e)}")]
 
 def run_illustrator_script(code: str) -> list[types.TextContent]:
-    logging.info("Running ExtendScript code in Illustrator.")
+    logging.info("Running ExtendScript code in Illustrator using COM.")
     try:
         with tempfile.NamedTemporaryFile(suffix=".jsx", delete=False) as jsx_file:
             jsx_file.write(code.encode("utf-8"))
             jsx_file_path = jsx_file.name
-
         logging.debug(f"ExtendScript saved to: {jsx_file_path}")
-
-        # Run script inside Illustrator using COM
-        app = win32com.client.Dispatch("Illustrator.Application")
-        app.DoJavaScriptFile(jsx_file_path)
-
-        os.unlink(jsx_file_path)  # Remove script after execution
+        illustrator = win32com.client.Dispatch("Illustrator.Application")
+        illustrator.DoJavaScriptFile(jsx_file_path)
         logging.info("ExtendScript executed successfully.")
-        return [types.TextContent(type="text", text="Script executed successfully.")]
+        os.unlink(jsx_file_path)
+        logging.debug("Temporary ExtendScript file removed.")
+        return [types.TextContent(type="text", text="Script executed successfully")]
     except Exception as e:
         logging.error(f"Failed to execute script: {str(e)}")
         return [types.TextContent(type="text", text=f"Failed to execute script: {str(e)}")]
 
 @server.call_tool()
-async def handle_call_tool(name: str, arguments: dict | None) -> list[types.TextContent | types.ImageContent]:
-    logging.info(f"Handling tool request: {name} with arguments: {arguments}")
+async def handle_call_tool(name: str, arguments: dict | None):
+    logging.info(f"Received tool call: {name} with arguments: {arguments}")
     if name == "view":
         return capture_illustrator()
     elif name == "run":
         if not arguments or "code" not in arguments:
-            logging.warning("No code provided for execution.")
-            return [types.TextContent(type="text", text="No code provided.")]
+            logging.warning("No code provided for run tool.")
+            return [types.TextContent(type="text", text="No code provided")]
         return run_illustrator_script(arguments["code"])
     else:
-        logging.error(f"Unknown tool requested: {name}")
-        return [types.TextContent(type="text", text=f"Unknown tool: {name}")]
+        error_msg = f"Unknown tool: {name}"
+        logging.error(error_msg)
+        raise ValueError(error_msg)
 
 async def main():
     logging.info("Initializing MCP server for Illustrator.")
@@ -112,8 +108,9 @@ async def main():
                 ),
             ),
         )
-        logging.info("MCP server is now running.")
+        logging.info("MCP server is running. Awaiting commands...")
+        await asyncio.Future()
 
 if __name__ == "__main__":
-    logging.info("Starting MCP server.")
+    logging.info("Starting the main event loop.")
     asyncio.run(main())
