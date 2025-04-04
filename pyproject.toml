@@ -1,0 +1,15 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "illustrator"
+version = "0.1.0"
+dependencies = [
+    "httpx>=0.28.1",
+    "mcp>=1.1.1",
+    "pillow>=11.0.0",
+]
+
+[project.scripts]
+illustrator = "illustrator.cli:run_server"

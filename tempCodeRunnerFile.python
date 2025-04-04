@@ -1,0 +1,12 @@
+import win32com.client
+
+# Connect to the running Illustrator instance
+illustrator = win32com.client.Dispatch("Illustrator.Application")
+
+# Path to your ExtendScript (.jsx) file
+jsx_script_path = r"C:\Users\kumar\Downloads\draw_rectangle.jsx"
+
+# Run the script inside Illustrator
+illustrator.DoJavaScriptFile(jsx_script_path)
+
+print("ExtendScript executed successfully!")
