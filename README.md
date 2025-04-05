@@ -67,7 +67,7 @@ To allow Claude Desktop to communicate with the MCP server:
 2. Add the MCP server configuration:
 
    ```json
-{
+
     "mcpServers": {
         "illustrator": {
             "command": "uv",
@@ -79,7 +79,7 @@ To allow Claude Desktop to communicate with the MCP server:
             ]
         }
     }
-}
+
    ```
 
    Replace `/Users/you/code/mcp/illustrator-mcp-server` with the correct path on your machine.
