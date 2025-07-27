@@ -81,10 +81,10 @@ To allow Claude Desktop to communicate with the MCP server:
 
    ```
 
-   Replace `/Users/you/code/mcp/illustrator-mcp-server` with the correct path on your machine.
+   Replace `/absolute/path/to/server.py` with the correct path on your machine.
 
 3. Restart Claude Desktop after saving the config.
-
+NOTE: Same method can be used with Cursor also, if Claude desktop fails(Might be bug in claude desktop with versions) then try on Cursor
 ---
 
 ## 🎯 Enhanced Prompt System
