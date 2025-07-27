@@ -141,10 +141,14 @@ Here are some prompts I used along with the results it generated:
 
 ---
 
+
 ## 📢 Contributing
 
 Pull requests are welcome!  
 Feel free to open issues for feature requests, bugs, or suggestions.
+![Stars](https://img.shields.io/github/stars/krVatsal/illustrator-mcp)
+![Forks](https://img.shields.io/github/forks/krVatsal/illustrator-mcp)
+![License](https://img.shields.io/github/license/krVatsal/illustrator-mcp)
 
 ---
 
