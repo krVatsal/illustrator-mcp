@@ -44,6 +44,8 @@ This version works on **Windows** by communicating with Illustrator’s scriptin
 
    ```bash
    pip install -r requirements.txt
+   or
+   uv sync
    ```
 
 5. **Start the MCP Server**
@@ -70,12 +72,9 @@ To allow Claude Desktop to communicate with the MCP server:
 
     "mcpServers": {
         "illustrator": {
-            "command": "uv",
+            "command": "python",
             "args": [
-                "--directory",
-                "/Users/you/code/mcp/illustrator-mcp-server",
-                "run",
-                "illustrator"
+                "/absolute/path/to/server.py"
             ]
         }
     }
@@ -85,6 +84,33 @@ To allow Claude Desktop to communicate with the MCP server:
    Replace `/Users/you/code/mcp/illustrator-mcp-server` with the correct path on your machine.
 
 3. Restart Claude Desktop after saving the config.
+
+---
+
+## 🎯 Enhanced Prompt System
+
+This MCP server now includes an advanced prompt system to help you create better content! Use these new tools:
+
+- **`get_prompt_suggestions`** - Get categorized prompt examples for different types of content
+- **`get_system_prompt`** - Get the optimal system prompt for AI guidance
+- **`get_prompting_tips`** - Get tips for creating more effective prompts
+- **`get_advanced_template`** - Get structured templates for complex design tasks
+- **`help`** - Display comprehensive help and guidance
+
+### 📚 Prompt Categories Available:
+- 🎨 Basic Shapes & Geometry
+- 📝 Typography & Text  
+- 🏢 Logos & Branding
+- 🌆 Illustrations & Scenes
+- 🎭 Icons & UI Elements
+- 🎨 Artistic & Creative
+- 📊 Charts & Infographics
+- 🏷️ Print & Layout
+
+### 💡 Quick Start with Prompts
+Try asking: *"Get me prompt suggestions for logos"* or *"Show me prompting tips"*
+
+For detailed examples and templates, see [PROMPT_EXAMPLES.md](./PROMPT_EXAMPLES.md)
 
 ---
 
