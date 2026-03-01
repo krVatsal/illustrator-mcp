@@ -29,8 +29,8 @@ This version works on **Windows** by communicating with Illustrator’s scriptin
 2. **Clone this repository**
 
    ```bash
-   git clone https://github.com/krVatsal/illustrator-mcp-server.git
-   cd illustrator-mcp-server
+   git clone https://github.com/krVatsal/illustrator-mcp.git
+   cd illustrator-mcp
    ```
 
 3. **Create a virtual environment** (recommended)
@@ -51,8 +51,28 @@ This version works on **Windows** by communicating with Illustrator’s scriptin
 5. **Start the MCP Server**
 
    ```bash
-   python server.py
+   python illustrator/server.py
    ```
+
+## Run With One Script (Windows + Git Bash)
+
+You can run setup + startup using:
+
+```bash
+bash run_server.sh
+```
+
+What this script does:
+- Creates `.venv` if it does not exist
+- Bootstraps `pip` in `.venv` if missing
+- Installs dependencies only when needed
+- Skips reinstall when requirements are already satisfied
+- Re-checks environment health before skipping install (`pip check` + key imports)
+- Starts the MCP server
+- Handles Windows/POSIX path conversion when launched from Git Bash or WSL-style shells
+
+How to stop the server:
+- Press `Ctrl+C` in the terminal where the server is running
 
 ---
 
@@ -72,18 +92,21 @@ To allow Claude Desktop to communicate with the MCP server:
 
     "mcpServers": {
         "illustrator": {
-            "command": "python",
+            "command": "C:\\Users\\<YourUser>\\Projects\\illustrator-mcp\\.venv\\Scripts\\python.exe",
             "args": [
-                "/absolute/path/to/server.py"
+                "C:\\Users\\<YourUser>\\Projects\\illustrator-mcp\\illustrator\\server.py"
             ]
         }
     }
 
    ```
-
-   Replace `/absolute/path/to/server.py` with the correct path on your machine.
+   Use absolute paths and replace `<YourUser>` with your Windows username.
+   If your config already has JSON content, merge this under the top-level object.
 
 3. Restart Claude Desktop after saving the config.
+4. Do not start `python illustrator/server.py` manually when using Claude Desktop MCP.
+   Claude Desktop starts and stops the server process automatically from this config.
+   Run the server manually only for local debugging.
 NOTE: Same method can be used with Cursor also, if Claude desktop fails(Might be bug in claude desktop with versions) then try on Cursor
 ---
 

@@ -26,14 +26,24 @@ except ImportError as e:
     WIN32_AVAILABLE = False
     win32com = None
 
-from prompt import (
-    get_system_prompt, 
-    get_prompt_suggestions, 
-    get_advanced_templates, 
-    get_prompting_tips,
-    display_help,
-    format_advanced_template
-)
+try:
+    from .prompt import (
+        get_system_prompt,
+        get_prompt_suggestions,
+        get_advanced_templates,
+        get_prompting_tips,
+        display_help,
+        format_advanced_template,
+    )
+except ImportError:
+    from prompt import (
+        get_system_prompt,
+        get_prompt_suggestions,
+        get_advanced_templates,
+        get_prompting_tips,
+        display_help,
+        format_advanced_template,
+    )
 
 # Set up logging
 logging.basicConfig(
@@ -43,6 +53,27 @@ logging.basicConfig(
 )
 
 server = Server("illustrator")
+
+
+def _print_client_config_hint() -> None:
+    """Print a ready-to-copy config snippet for MCP clients."""
+    python_path = sys.executable.replace("\\", "\\\\")
+    server_path = os.path.abspath(__file__).replace("\\", "\\\\")
+    hint = f"""
+Add this MCP config in Codex/Cursor/Claude client settings:
+{{
+  "mcpServers": {{
+    "illustrator": {{
+      "command": "{python_path}",
+      "args": [
+        "{server_path}"
+      ]
+    }}
+  }}
+}}
+"""
+    print(hint, file=sys.stderr)
+    sys.stderr.flush()
 
 @server.list_tools()
 async def handle_list_tools() -> list[types.Tool]:
@@ -290,6 +321,7 @@ async def main():
         async with mcp.server.stdio.stdio_server() as (read_stream, write_stream):
             print("Server streams established, starting server...", file=sys.stderr)
             sys.stderr.flush()
+            _print_client_config_hint()
             
             await server.run(
                 read_stream,
