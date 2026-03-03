@@ -184,11 +184,12 @@ def run_illustrator_script(code: str) -> list[types.TextContent]:
             jsx_file_path = jsx_file.name
         logging.debug(f"ExtendScript saved to: {jsx_file_path}")
         illustrator = win32com.client.Dispatch("Illustrator.Application")
-        illustrator.DoJavaScriptFile(jsx_file_path)
+        result = illustrator.DoJavaScriptFile(jsx_file_path)
         logging.info("ExtendScript executed successfully.")
         os.unlink(jsx_file_path)
         logging.debug("Temporary ExtendScript file removed.")
-        return [types.TextContent(type="text", text="Script executed successfully")]
+        result_text = str(result) if result is not None else "Script executed successfully (no return value)"
+        return [types.TextContent(type="text", text=result_text)]
     except Exception as e:
         logging.error(f"Failed to execute script: {str(e)}")
         return [types.TextContent(type="text", text=f"Failed to execute script: {str(e)}")]
