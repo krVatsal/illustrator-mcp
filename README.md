@@ -21,15 +21,6 @@ Works on **Windows** (COM automation) and **macOS** (AppleScript/osascript).
 
 ---
 
-<p align="center">
-  <a href="https://warpchart.dev/hq">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://warpchart.dev/api/chart?theme=dark&v=3">
-      <img alt="Live star telemetry of santifer/career-ops" src="https://warpchart.dev/api/chart?theme=light&v=3" loading="lazy">
-    </picture>
-  </a>
-</p>
-
 ## 💻 Installation
 
 ### Prerequisites
